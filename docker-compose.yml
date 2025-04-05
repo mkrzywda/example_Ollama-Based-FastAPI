@@ -1,0 +1,27 @@
+services:
+  llm-ollama-deepseek:
+    build: ./ollama
+    container_name: llm-ollama-deepseek
+    pull_policy: always
+    tty: true
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  llm-based-app-fastapi:
+    build: ./app
+    container_name: llm-based-fastapi
+    ports:
+      - "7777:8000"
+    restart: unless-stopped
+    depends_on:
+      - llm-ollama-deepseek
+    networks:
+      - app-network
+    environment:
+      - username=username123
+      - password=password123
+networks:
+  app-network:
+    driver: bridge
+ 
